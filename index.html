@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f3a5f">
+<title>CPA Sprint 3 Dias</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+</head>
+<body>
+<style>
+/* Layout: uma coluna estreita tipo caderno de prova, barra de navegação fixa embaixo no celular */
+:root{
+  --bg:#f6f4ee; --paper:#ffffff; --fg:#1d1f1a; --mute:#6b6e63; --line:#dedbd0;
+  --ink:#1f3a5f; --ink-soft:#e6ecf4; --ok:#2e7d4f; --ok-soft:#e3f2e8; --bad:#b4362f; --bad-soft:#f8e4e2; --warn:#b9771a; --warn-soft:#f9efdc;
+  --display:"Fraunces",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#16181a; --paper:#1f2225; --fg:#ecebe4; --mute:#9a9e94; --line:#33373b;
+  --ink:#8fb3e0; --ink-soft:#1f2b3a; --ok:#6fcf97; --ok-soft:#1d3327; --bad:#ef8a84; --bad-soft:#3a2321; --warn:#e3b35a; --warn-soft:#3a2f1c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#16181a; --paper:#1f2225; --fg:#ecebe4; --mute:#9a9e94; --line:#33373b;
+  --ink:#8fb3e0; --ink-soft:#1f2b3a; --ok:#6fcf97; --ok-soft:#1d3327; --bad:#ef8a84; --bad-soft:#3a2321; --warn:#e3b35a; --warn-soft:#3a2f1c; color-scheme:dark}
+*{box-sizing:border-box}
+/* Paletas escolhidas pela Patricia (sobrepõem o tema do sistema) */
+:root[data-palette="papel"]{--bg:#f6f4ee;--paper:#ffffff;--fg:#1d1f1a;--mute:#6b6e63;--line:#dedbd0;--ink:#1f3a5f;--ink-soft:#e6ecf4;--ok:#2e7d4f;--ok-soft:#e3f2e8;--bad:#b4362f;--bad-soft:#f8e4e2;--warn:#b9771a;--warn-soft:#f9efdc;color-scheme:light}
+:root[data-palette="sepia"]{--bg:#f3e9d8;--paper:#faf3e6;--fg:#3a2e22;--mute:#7d6b58;--line:#dccab2;--ink:#7a4a1e;--ink-soft:#f0e0cc;--ok:#4f7a3a;--ok-soft:#e4eed9;--bad:#a8402f;--bad-soft:#f4ddd6;--warn:#a2721f;--warn-soft:#f5e9d0;color-scheme:light}
+:root[data-palette="verde"]{--bg:#e9f1ea;--paper:#f4f9f4;--fg:#1c2a20;--mute:#5f7064;--line:#cbdccf;--ink:#1f5a44;--ink-soft:#d8ebe0;--ok:#2e7d4f;--ok-soft:#dcefe2;--bad:#a93a32;--bad-soft:#f3dcd9;--warn:#9c6d14;--warn-soft:#f1e6cc;color-scheme:light}
+:root[data-palette="noite"]{--bg:#16181a;--paper:#1f2225;--fg:#ecebe4;--mute:#9a9e94;--line:#33373b;--ink:#8fb3e0;--ink-soft:#1f2b3a;--ok:#6fcf97;--ok-soft:#1d3327;--bad:#ef8a84;--bad-soft:#3a2321;--warn:#e3b35a;--warn-soft:#3a2f1c;color-scheme:dark}
+:root[data-palette="preto"]{--bg:#000000;--paper:#121212;--fg:#ffffff;--mute:#c8c8c8;--line:#3a3a3a;--ink:#ffd166;--ink-soft:#2a2410;--ok:#7CFC9A;--ok-soft:#0f2a17;--bad:#ff8a80;--bad-soft:#331513;--warn:#ffc96b;--warn-soft:#2e2412;color-scheme:dark}
+:root[data-palette="contraste"]{--bg:#ffffff;--paper:#ffffff;--fg:#000000;--mute:#333333;--line:#000000;--ink:#0000c8;--ink-soft:#e5e5ff;--ok:#006400;--ok-soft:#dff5df;--bad:#b00000;--bad-soft:#ffe0e0;--warn:#7a4b00;--warn-soft:#fff0cc;color-scheme:light}
+:root[data-size="p"]{--fs:15px}:root[data-size="m"]{--fs:17px}:root[data-size="g"]{--fs:19px}:root[data-size="gg"]{--fs:22px}
+.swatches{display:flex;flex-wrap:wrap;gap:8px}
+.sw{display:flex;align-items:center;gap:8px;border:2px solid var(--line);background:var(--paper);color:var(--fg);border-radius:10px;padding:8px 12px;font:600 .9rem var(--body);cursor:pointer}
+.sw.on{border-color:var(--ink)}
+.sw i{width:18px;height:18px;border-radius:50%;border:1px solid rgba(0,0,0,.2);display:inline-block}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{background:var(--paper);color:var(--fg);border:0;padding:8px 14px;font:600 .9rem var(--body);cursor:pointer}
+.seg button.on{background:var(--ink);color:#fff}
+.sync{font-family:var(--mono);font-size:.75rem;color:var(--mute)}
+textarea.bk{width:100%;min-height:70px;font:.8rem var(--mono);border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--paper);color:var(--fg)}
+.summ{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.summ ul{padding-left:18px;margin:6px 0}
+.summ li{margin-bottom:6px;font-size:.95rem}
+.done{background:var(--ok-soft);border:1px solid var(--ok);border-radius:10px;padding:10px 14px;margin:10px 0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:var(--fs,17px);line-height:1.5;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 96px}
+.wrap{max-width:720px;margin:0 auto}
+header.top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-block:22px 10px;border-bottom:2px solid var(--fg)}
+header.top h1{font-family:var(--display);font-weight:700;font-size:1.6rem;margin:0;letter-spacing:-.01em}
+header.top .tag{font-family:var(--mono);font-size:.72rem;color:var(--mute);letter-spacing:.06em;text-transform:uppercase}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:1px solid var(--line);display:flex;justify-content:center;gap:2px;
+  padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px));padding-block:6px calc(6px + env(safe-area-inset-bottom,0px));z-index:20}
+nav.tabs button{flex:1;max-width:130px;background:none;border:0;color:var(--mute);font:600 .78rem var(--body);padding:8px 4px;border-radius:8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav.tabs button .k{font-family:var(--mono);font-size:1rem;color:inherit}
+nav.tabs button.on{color:var(--ink);background:var(--ink-soft)}
+nav.tabs button:focus-visible,button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+section.view{padding-block:18px}
+h2{font-family:var(--display);font-size:1.35rem;margin:0 0 6px;text-wrap:balance}
+h3{font-size:1rem;margin:18px 0 6px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);font-weight:700}
+p{margin:0 0 10px}
+.lead{color:var(--mute)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px}
+.grid{display:grid;gap:12px}
+@media(min-width:560px){.grid.two{grid-template-columns:1fr 1fr}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--ink);background:var(--ink);color:#fff;font:600 1rem var(--body);padding:11px 18px;border-radius:10px;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.sm{padding:7px 12px;font-size:.9rem}
+.btn[disabled]{opacity:.45;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.mods{display:grid;gap:8px}
+.mod{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.mod:last-child{border-bottom:0}
+.mod .w{font-family:var(--mono);font-size:.85rem;color:var(--mute);min-width:3.2em}
+.mod .name{font-weight:600;min-width:0}
+.mod .name small{display:block;font-weight:400;color:var(--mute);font-size:.85rem}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--ink);border-radius:99px;transition:width .4s}
+.bar i.ok{background:var(--ok)}.bar i.bad{background:var(--bad)}.bar i.warn{background:var(--warn)}
+.pct{font-family:var(--mono);font-size:.95rem;text-align:right}
+.pill{display:inline-block;font:600 .75rem var(--body);padding:3px 9px;border-radius:99px;letter-spacing:.03em}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}.pill.bad{background:var(--bad-soft);color:var(--bad)}.pill.warn{background:var(--warn-soft);color:var(--warn)}.pill.ink{background:var(--ink-soft);color:var(--ink)}
+.plan li{margin-bottom:8px}
+.plan b{font-family:var(--mono);font-size:.85rem;color:var(--ink)}
+/* questão */
+.q-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:var(--mono);font-size:.78rem;color:var(--mute);margin-bottom:10px}
+.q-text{font-size:1.08rem;font-weight:600;margin-bottom:14px;text-wrap:pretty}
+.opts{display:grid;gap:8px}
+.opt{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:11px 12px;font:1rem var(--body);color:var(--fg);cursor:pointer;line-height:1.4}
+.opt .l{font-family:var(--mono);font-size:.85rem;color:var(--mute);padding-top:2px}
+.opt:hover{border-color:var(--ink)}
+.opt.sel{border-color:var(--ink);background:var(--ink-soft)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.fb{margin-top:14px;padding:14px;border-radius:10px;background:var(--paper);border-left:4px solid var(--ink)}
+.fb.good{border-left-color:var(--ok)}.fb.badfb{border-left-color:var(--bad)}
+.fb .why{font-size:.95rem}
+.feyn{margin-top:12px;padding:12px 14px;border:1px dashed var(--line);border-radius:10px}
+.feyn p{font-size:.95rem}
+.feyn .row button{flex:1}
+.timer{font-family:var(--mono);font-size:1.05rem;padding:4px 10px;border-radius:8px;background:var(--paper);border:1px solid var(--line)}
+.timer.low{color:var(--bad);border-color:var(--bad)}
+.progress{height:4px;background:var(--line);border-radius:99px;overflow:hidden;margin:8px 0 14px}
+.progress i{display:block;height:100%;background:var(--ink)}
+.big{font-family:var(--display);font-size:3rem;line-height:1;font-weight:700;letter-spacing:-.02em}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:14px 0}
+.result-grid .card{padding:12px}
+.result-grid .n{font-family:var(--mono);font-size:1.3rem}
+.result-grid .t{font-size:.85rem;color:var(--mute)}
+table{width:100%;border-collapse:collapse;font-size:.93rem}
+td,th{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}
+td.n{font-family:var(--mono);white-space:nowrap}
+.tbl{overflow-x:auto;margin-bottom:14px}
+details{border:1px solid var(--line);border-radius:10px;background:var(--paper);margin-bottom:8px}
+details summary{padding:12px 14px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details summary::after{content:"+";font-family:var(--mono);color:var(--mute)}
+details[open] summary::after{content:"–"}
+details .in{padding:0 14px 14px}
+.flash{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px 18px;min-height:150px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.flash .front{font-size:1.1rem;font-weight:600}
+.flash .back{color:var(--fg);border-top:1px dashed var(--line);padding-top:10px}
+.muted{color:var(--mute);font-size:.9rem}
+.empty{padding:30px 14px;text-align:center;color:var(--mute)}
+.note{font-size:.88rem;color:var(--mute);border-left:3px solid var(--line);padding-left:10px;margin:10px 0}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <h1>CPA Sprint 3 Dias</h1>
+  <span class="tag">Patricia · 50 questões · 35 pra passar</span>
+</header>
+
+<!-- ========== PAINEL ========== -->
+<section class="view" id="v-home">
+  <h2>Patricia, você está pronta pra prova?</h2>
+  <p class="lead">A prova tem 4 módulos com pesos fixos. Esta página mede sua prontidão em cada um, com base no que você já respondeu aqui. Comece pelo <b>Diagnóstico</b> (20 questões, ~25 min): ele mostra onde atacar primeiro.</p>
+
+  <div id="done-banner"></div>
+
+  <details id="settings" style="margin-bottom:12px"><summary><span>Cores, tamanho da letra e backup</span></summary><div class="in">
+    <h3 style="margin-top:4px">Cores pra leitura</h3>
+    <div class="swatches" id="swatches"></div>
+    <h3>Tamanho da letra</h3>
+    <div class="seg" id="sizes"><button data-s="p">P</button><button data-s="m" class="on">M</button><button data-s="g">G</button><button data-s="gg">GG</button></div>
+    <h3>Seu progresso</h3>
+    <p class="sync" id="sync-status">Salvo neste aparelho.</p>
+    <p class="muted">Seu progresso fica salvo automaticamente neste navegador. Não limpe os dados do navegador e não use aba anônima. Pra garantir (ou pra trocar de celular), copie o código de backup e guarde no WhatsApp pra você mesma. No outro aparelho, cole e restaure.</p>
+    <div class="row"><button class="btn ghost sm" onclick="exportBk()">Copiar código de backup</button><button class="btn ghost sm" onclick="document.getElementById('bk-import').hidden=false">Restaurar de um código</button></div>
+    <div id="bk-import" hidden style="margin-top:10px"><textarea class="bk" id="bk-text" placeholder="Cole o código aqui"></textarea><div class="row" style="margin-top:8px"><button class="btn sm" onclick="importBk()">Restaurar</button><span class="muted" id="bk-msg"></span></div></div>
+    <textarea class="bk" id="bk-out" hidden readonly style="margin-top:8px"></textarea>
+  </div></details>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between;align-items:flex-end">
+      <div><div class="muted">Prontidão geral estimada</div><div class="big" id="overall">–</div></div>
+      <div id="verdict"></div>
+    </div>
+    <div class="mods" id="mods"></div>
+    <p class="note" id="home-note">Nenhuma resposta registrada ainda. Faça o Diagnóstico pra calibrar.</p>
+    <div class="row">
+      <button class="btn" onclick="startDiag()">Fazer o Diagnóstico</button>
+      <button class="btn ghost" onclick="go('sim')">Ir direto pro Simulado</button>
+    </div>
+  </div>
+
+  <h3>Como funciona a prova</h3>
+  <div class="card">
+    <div class="tbl"><table>
+      <tr><th>Item</th><th>Regra</th></tr>
+      <tr><td>Questões</td><td>50 (40 múltipla escolha contextualizada + 10 em árvore de decisão)</td></tr>
+      <tr><td>Tempo</td><td>2h30 (3 min por questão)</td></tr>
+      <tr><td>Aprovação</td><td>35 acertos = 70%</td></tr>
+      <tr><td>Calculadora</td><td>Só a do sistema (e planilha). Não pode levar a sua.</td></tr>
+      <tr><td>Banheiro</td><td>Pode sair, mas tudo que já abriu tem que estar respondido. O tempo não volta.</td></tr>
+      <tr><td>Resultado</td><td>Provisório na hora; oficial em até 5 dias úteis, com nota por módulo.</td></tr>
+    </table></div>
+    <p class="muted">Módulos 2 e 3 somam 70% da prova. É exatamente a nota de corte: quem domina Produtos e Relacionamento passa mesmo errando bastante no resto.</p>
+  </div>
+
+  <h3>Plano pros 3 dias</h3>
+  <div class="card">
+    <ol class="plan">
+      <li><b>DIA 1</b> Diagnóstico → leia o Resumão do módulo mais fraco → 2 rodadas de Treino (25 questões cada), explicando em voz alta cada resposta. À noite, Revisão dos cards pendentes.</li>
+      <li><b>DIA 2</b> Manhã: Revisão. Depois 1 Simulado completo cronometrado (2h30, sem pausa, calculadora do celular desligada: use papel). Corrija lendo o "por quê" de TODA questão, inclusive as que acertou. À noite, Treino focado nos 2 piores tópicos.</li>
+      <li><b>DIA 3 (véspera)</b> Revisão dos cards + 1 Treino leve de 15 questões + Resumão dos números (tabela de IR, FGC, prazos). Pare cedo. Durma. Decoreba na madrugada só piora.</li>
+    </ol>
+    <p class="muted">Por que essa ordem: testar antes de estudar (diagnóstico), misturar módulos (intercalação), explicar em voz alta (Feynman), rever em intervalos crescentes (espaçamento) e simular a prova real. É o que a ciência cognitiva mostra que funciona melhor que reler apostila.</p>
+  </div>
+</section>
+
+<!-- ========== TREINO / DIAGNÓSTICO / SIMULADO (motor compartilhado) ========== -->
+<section class="view" id="v-quiz" hidden>
+  <div id="quiz-setup">
+    <h2>Treino intercalado</h2>
+    <p class="lead">Questões de todos os módulos misturadas, na proporção da prova. Você responde, vê o porquê, e depois explica em voz alta como se fosse pra um cliente. Essa explicação é o que fixa.</p>
+    <div class="card">
+      <div class="row">
+        <label>Quantas: <select id="t-n"><option>15</option><option selected>25</option><option>40</option></select></label>
+        <label>Foco: <select id="t-mod"><option value="0">Todos (proporção da prova)</option><option value="1">Só Módulo 1</option><option value="2">Só Módulo 2</option><option value="3">Só Módulo 3</option><option value="4">Só Módulo 4</option></select></label>
+      </div>
+      <div class="row" style="margin-top:12px"><button class="btn" onclick="startTrain()">Começar treino</button></div>
+    </div>
+  </div>
+
+  <div id="quiz-run" hidden>
+    <div class="q-meta">
+      <span id="q-count"></span>
+      <span id="q-mod"></span>
+      <span class="timer" id="q-timer" hidden></span>
+    </div>
+    <div class="progress"><i id="q-prog" style="width:0%"></i></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="opts" id="q-opts"></div>
+    <div id="q-fb" hidden></div>
+    <div class="row" style="margin-top:16px;justify-content:space-between">
+      <button class="btn ghost sm" onclick="quitQuiz()">Sair</button>
+      <button class="btn" id="q-next" onclick="nextQ()" disabled>Próxima</button>
+    </div>
+  </div>
+
+  <div id="quiz-result" hidden></div>
+</section>
+
+<!-- ========== REVISÃO ESPAÇADA ========== -->
+<section class="view" id="v-rev">
+  <h2>Revisão espaçada</h2>
+  <p class="lead">Aqui ficam os cards que você precisa rever: tudo que errou ou que travou pra explicar. Acertou de primeira, o card volta mais tarde; errou, volta logo. Em 3 dias os intervalos são curtos: horas, não semanas.</p>
+  <div id="rev-box"></div>
+</section>
+
+<!-- ========== RESUMÃO ========== -->
+<section class="view" id="v-sum" hidden>
+  <h2>Resumão: o que mais cai</h2>
+  <p class="lead">Números e distinções que aparecem em quase toda prova. Leia depois do Diagnóstico, não antes: tentar primeiro e falhar prepara o cérebro pra reter.</p>
+  <div id="sum-box"></div>
+</section>
+</div>
+
+<nav class="tabs">
+  <button data-v="home" class="on" onclick="go('home')"><span class="k">◎</span>Painel</button>
+  <button data-v="quiz" onclick="go('quiz')"><span class="k">⇄</span>Treino</button>
+  <button data-v="sim" onclick="go('sim')"><span class="k">⏱</span>Simulado</button>
+  <button data-v="rev" onclick="go('rev')"><span class="k">↻</span>Revisão</button>
+  <button data-v="sum" onclick="go('sum')"><span class="k">≡</span>Resumão</button>
+</nav>
+
+<script>
+/* ---------- BANCO ---------- */
+const MODS={1:{n:"Sistema Financeiro",w:.20,d:"Órgãos, política econômica, matemática financeira, infraestrutura"},
+2:{n:"Produtos",w:.40,d:"Renda fixa e variável, fundos, previdência, crédito, seguros"},
+3:{n:"Relacionamento",w:.30,d:"Finanças pessoais, suitability, ética, PLD, LGPD, crimes"},
+4:{n:"Inovação",w:.10,d:"ESG, DeFi, Open Finance, IA, fintechs"}};
+
+// {m: módulo, t: tópico, q, o: [4 opções], a: índice correto, e: explicação, f: pergunta Feynman}
+const Q=[
+/* ===== MÓDULO 1 ===== */
+{m:1,t:"Órgãos do SFN",q:"Um cliente pergunta quem define a meta de inflação que o Banco Central tem que perseguir. A resposta correta é:",o:["O próprio Banco Central, via Copom","O Conselho Monetário Nacional (CMN)","A CVM","O Ministério da Fazenda, sozinho"],a:1,e:"O CMN é o órgão normativo máximo do SFN: define a meta de inflação e as diretrizes da política monetária. O BC (via Copom) é quem executa, fixando a meta Selic pra alcançar a meta de inflação.",f:"Explique a diferença entre quem normatiza (CMN) e quem supervisiona/executa (BC)."},
+{m:1,t:"Órgãos do SFN",q:"Fiscalizar fundos de investimento, bolsas e companhias abertas é atribuição de qual órgão?",o:["Banco Central","SUSEP","CVM","PREVIC"],a:2,e:"CVM supervisiona o mercado de valores mobiliários (ações, debêntures, fundos, bolsa). BC supervisiona instituições financeiras e o SPB; SUSEP, seguros e previdência aberta (PGBL/VGBL); PREVIC, fundos de pensão (previdência fechada).",f:"Diga de cabeça: BC, CVM, SUSEP e PREVIC supervisionam o quê, cada um?"},
+{m:1,t:"Órgãos do SFN",q:"PGBL e VGBL são fiscalizados por qual supervisor?",o:["PREVIC","CVM","Banco Central","SUSEP"],a:3,e:"Previdência ABERTA (EAPC, seguradoras, PGBL/VGBL) é SUSEP, com o CNSP normatizando. Previdência FECHADA (fundos de pensão) é PREVIC, com o CNPC normatizando. Pegadinha clássica.",f:"Por que PGBL é SUSEP e fundo de pensão é PREVIC?"},
+{m:1,t:"FGC",q:"Cliente tem R$ 300 mil em CDB num único banco que quebrou. Quanto o FGC cobre?",o:["R$ 300 mil, integral","R$ 250 mil","R$ 1 milhão","Nada, CDB não tem FGC"],a:1,e:"FGC garante até R$ 250 mil por CPF/CNPJ, por instituição (ou conglomerado), com teto global de R$ 1 milhão renovado a cada 4 anos. Cobre depósitos à vista, poupança, CDB, RDB, LCI, LCA, LC. NÃO cobre fundos, debêntures, CRI, CRA, COE, Tesouro Direto nem ações.",f:"Liste 3 produtos cobertos e 3 não cobertos pelo FGC."},
+{m:1,t:"Política monetária",q:"O Banco Central quer reduzir a inflação. Qual combinação de medidas é coerente?",o:["Comprar títulos no mercado aberto e reduzir o compulsório","Vender títulos no mercado aberto e elevar o compulsório","Reduzir a taxa de redesconto e comprar títulos","Elevar o gasto público"],a:1,e:"Política contracionista enxuga liquidez: VENDER títulos (open market), AUMENTAR compulsório, AUMENTAR redesconto. Menos dinheiro circulando → juros sobem → consumo cai → inflação cede. Gasto público é política fiscal, não monetária.",f:"Explique como vender títulos públicos tira dinheiro da economia."},
+{m:1,t:"Política monetária",q:"Sobre a relação entre meta Selic, taxa Selic e CDI, é correto afirmar:",o:["A meta Selic é definida pelo CMN e o CDI pela B3","O Copom define a meta Selic; a Selic efetiva (over) oscila perto dela; o CDI acompanha de perto a Selic","CDI é sempre maior que a Selic porque envolve risco de crédito","A taxa Selic é definida pelo Tesouro Nacional"],a:1,e:"Copom (do BC) define a META Selic a cada 45 dias (8 reuniões/ano). A Selic efetiva é a média das operações compromissadas com títulos públicos. O CDI é a taxa dos empréstimos interbancários de 1 dia, que anda colada na Selic (normalmente um pouquinho abaixo).",f:"Se a Selic sobe, o que acontece com a rentabilidade de um CDB 100% do CDI?"},
+{m:1,t:"Política econômica",q:"Qual índice é usado como referência oficial para a meta de inflação no Brasil?",o:["IGP-M","IPCA","INPC","IPC-Fipe"],a:1,e:"IPCA (IBGE) é o índice oficial da meta de inflação. IGP-M (FGV) pesa muito o atacado e é usado em contratos de aluguel. INPC mede famílias de renda mais baixa. IPC-Fipe cobre a cidade de São Paulo.",f:"Por que o IGP-M costuma oscilar mais que o IPCA?"},
+{m:1,t:"Política cambial",q:"A PTAX é:",o:["A taxa de câmbio fixada diariamente pelo CMN","A média das cotações de dólar apurada pelo Banco Central, usada como referência em contratos","A cotação do câmbio turismo","A taxa cobrada nas casas de câmbio"],a:1,e:"PTAX é apurada pelo BC a partir de consultas aos dealers ao longo do dia. Serve de referência para liquidar contratos (derivativos, dívidas). Câmbio comercial é usado em comércio exterior; câmbio turismo tem spread maior.",f:"Quem divulga a PTAX e pra que ela serve?"},
+{m:1,t:"Matemática financeira",q:"Um CDB rendeu 12% no ano e a inflação foi 5%. A taxa real aproximada e a exata são, respectivamente:",o:["7% e 6,67%","7% e 7,00%","17% e 16,7%","5% e 7%"],a:0,e:"Aproximação: 12% − 5% = 7%. Exata (Fisher): (1,12 / 1,05) − 1 = 6,67%. A taxa real é sempre um pouco menor que a simples subtração quando a inflação é positiva.",f:"Escreva a fórmula de Fisher e explique por que não é só subtrair."},
+{m:1,t:"Matemática financeira",q:"Juros simples versus compostos: aplicando R$ 1.000 a 10% ao ano por 2 anos, os montantes são:",o:["R$ 1.200 e R$ 1.200","R$ 1.200 e R$ 1.210","R$ 1.100 e R$ 1.210","R$ 1.210 e R$ 1.200"],a:1,e:"Simples: 1.000 × (1 + 0,10×2) = 1.200. Compostos: 1.000 × 1,10² = 1.210. Nos compostos, juros rendem sobre juros. Em prazo inferior a 1 período, juros simples rendem mais; acima, compostos rendem mais.",f:"Explique 'juros sobre juros' com um exemplo de 3 anos."},
+{m:1,t:"Sistemas de amortização",q:"No sistema SAC, comparado ao Price:",o:["As prestações são constantes e a amortização é crescente","A amortização é constante e as prestações são decrescentes","Paga-se mais juros no total","Não há amortização nos primeiros anos"],a:1,e:"SAC: amortização constante → prestação começa maior e cai ao longo do tempo → total de juros menor. Price: prestação constante → amortiza pouco no início → total de juros maior.",f:"Pra quem o SAC é melhor e por quê, pensando no total pago?"},
+{m:1,t:"Investidores",q:"Pela Resolução CVM 30, para ser investidor qualificado uma pessoa física precisa ter investimentos financeiros de pelo menos:",o:["R$ 300 mil","R$ 1 milhão","R$ 10 milhões","R$ 5 milhões"],a:1,e:"Qualificado: ≥ R$ 1 milhão (ou certificação aprovada pela CVM, como CGA/CEA). Profissional: ≥ R$ 10 milhões (ou instituição financeira, fundo, etc.). Todo profissional é qualificado; nem todo qualificado é profissional.",f:"Diga os dois valores e um exemplo de cada tipo."},
+{m:1,t:"Infraestrutura",q:"Títulos públicos federais são custodiados e liquidados em qual sistema?",o:["B3 (clearing de ações)","Selic (Sistema Especial de Liquidação e Custódia)","SPI (Pix)","CIP"],a:1,e:"Selic (o sistema, operado pelo BC) custodia e liquida títulos públicos federais. A B3 cuida de ações, derivativos e títulos privados (antiga Cetip). SPI é a infraestrutura do Pix.",f:"Qual a diferença entre 'taxa Selic' e 'sistema Selic'?"},
+{m:1,t:"Risco",q:"Um fundo tem dificuldade de vender seus ativos sem derrubar o preço para honrar resgates. Esse é um exemplo de risco de:",o:["Crédito","Mercado","Liquidez","Operacional"],a:2,e:"Liquidez: não conseguir transformar o ativo em dinheiro rapidamente a preço justo. Crédito: calote do emissor. Mercado: oscilação de preços (juros, câmbio, bolsa). Operacional: falha de processo, pessoa ou sistema.",f:"Dê um exemplo real de cada um dos três riscos clássicos."},
+{m:1,t:"Autorregulação",q:"Fiscalizar o cumprimento do Código de Distribuição de Produtos de Investimento (suitability, publicidade, remuneração) é papel de:",o:["CVM","Banco Central","Anbima (autorregulação)","BSM"],a:2,e:"Anbima é autorreguladora: suas instituições associadas aderem aos códigos (Distribuição, Certificação, etc.) e são fiscalizadas por ela. CVM e BC são reguladores estatais. BSM supervisiona o mercado da B3.",f:"Qual a diferença entre regulação (CVM) e autorregulação (Anbima)?"},
+
+/* ===== MÓDULO 2 ===== */
+{m:2,t:"Tributação renda fixa",q:"Cliente resgata um CDB após 400 dias. Qual alíquota de IR sobre o rendimento?",o:["22,5%","20%","17,5%","15%"],a:2,e:"Tabela regressiva de renda fixa: até 180 dias 22,5%; 181 a 360 dias 20%; 361 a 720 dias 17,5%; acima de 720 dias 15%. Vale pra CDB, Tesouro, fundos de renda fixa, debêntures comuns.",f:"Recite a tabela regressiva completa com os prazos."},
+{m:2,t:"Tributação renda fixa",q:"Sobre o IOF em aplicações de renda fixa:",o:["Incide sempre, qualquer prazo","Incide de forma regressiva nos primeiros 30 dias e zera a partir do 30º dia","Só incide em LCI e LCA","Incide a 15% fixo"],a:1,e:"IOF regressivo: 96% do rendimento no 1º dia caindo até 0% no 30º dia. Depois de 30 dias não há IOF. Ele é cobrado ANTES do IR e só sobre o rendimento.",f:"Se o cliente resgata com 10 dias, o que ele perde além do IR?"},
+{m:2,t:"Isenções",q:"Quais destes produtos são isentos de IR para pessoa física?",o:["CDB e Tesouro Selic","LCI, LCA, CRI, CRA e debêntures incentivadas","Fundos multimercado","COE"],a:1,e:"Isentos pra PF: LCI, LCA, LCD, CRI, CRA, debêntures incentivadas (infraestrutura), poupança e dividendos de ações. Lembre: LCI/LCA têm FGC; CRI/CRA/debêntures não têm.",f:"Por que o governo isenta LCI e LCA? Qual setor ele quer financiar?"},
+{m:2,t:"Tesouro Direto",q:"Cliente quer proteção contra inflação com pagamento de juros semestrais. O título adequado é:",o:["Tesouro Selic (LFT)","Tesouro Prefixado (LTN)","Tesouro IPCA+ com juros semestrais (NTN-B)","Tesouro IPCA+ (NTN-B Principal)"],a:2,e:"LFT = pós-fixado à Selic (reserva de emergência). LTN = prefixado, sem cupom. NTN-B = IPCA + juros, COM cupom semestral. NTN-B Principal = IPCA + juros, SEM cupom (paga tudo no vencimento). Ainda existem Renda+ e Educa+, variações do IPCA+.",f:"Qual título oscila mais de preço antes do vencimento: LFT ou LTN? Por quê?"},
+{m:2,t:"Renda fixa",q:"Taxa de juros de mercado sobe. O que acontece com o preço de um título prefixado antes do vencimento?",o:["Sobe","Cai","Não muda","Depende do emissor"],a:1,e:"Relação inversa: juros sobem → preço do prefixado cai (marcação a mercado). Quanto maior o prazo (duration), maior a queda. Quem leva até o vencimento recebe a taxa contratada.",f:"Explique a 'gangorra' entre juros e preço pra um cliente leigo."},
+{m:2,t:"Poupança",q:"Com a Selic em 10% ao ano, a poupança rende:",o:["70% da Selic + TR","0,5% ao mês + TR","100% do CDI","6% ao ano fixo"],a:1,e:"Regra: Selic > 8,5% a.a. → 0,5% a.m. + TR. Selic ≤ 8,5% a.a. → 70% da Selic + TR. Isenta de IR pra PF, rende só na data de aniversário, tem FGC.",f:"Por que resgatar a poupança um dia antes do aniversário é um erro?"},
+{m:2,t:"Debêntures",q:"Sobre debêntures, é correto afirmar:",o:["São títulos de dívida emitidos por bancos, com FGC","São títulos de dívida emitidos por S/A não financeiras, sem FGC; as incentivadas de infraestrutura são isentas de IR pra PF","São títulos de participação no capital da empresa","Só podem ser compradas por investidor profissional"],a:1,e:"Debênture = dívida de empresa (não banco). Risco de crédito do emissor, sem FGC. As de infraestrutura (Lei 12.431) são isentas de IR pra PF. Conversíveis podem virar ações; permutáveis viram ações de outra empresa.",f:"Diferença entre debênture (credor) e ação (sócio)?"},
+{m:2,t:"CRI/CRA",q:"CRI e CRA são emitidos por:",o:["Bancos múltiplos","Companhias securitizadoras","Tesouro Nacional","Cooperativas de crédito"],a:1,e:"Securitizadoras transformam recebíveis (imobiliários ou do agro) em títulos. Isentos de IR pra PF, SEM FGC, geralmente com liquidez baixa. LCI/LCA, por outro lado, são emitidos por bancos e têm FGC.",f:"LCI versus CRI: o que muda em emissor e garantia?"},
+{m:2,t:"Ações",q:"Pessoa física vendeu R$ 18 mil em ações em um mês (operações normais) com lucro de R$ 2 mil. O IR devido é:",o:["15% sobre R$ 2 mil","20% sobre R$ 2 mil","Zero, pela isenção de vendas até R$ 20 mil/mês","15% sobre R$ 18 mil"],a:2,e:"Vendas totais até R$ 20 mil no mês (operações comuns, não day trade): ganho isento. Acima: 15% sobre o ganho líquido. Day trade: 20%, sem isenção. Dedo-duro na fonte: 0,005% (normal) e 1% (day trade). Dividendos isentos; JCP 15% na fonte.",f:"Explique a isenção dos R$ 20 mil: é sobre o lucro ou sobre o valor vendido?"},
+{m:2,t:"Ações",q:"Ações ordinárias (ON) e preferenciais (PN) diferem porque:",o:["PN dá direito a voto; ON dá prioridade em dividendos","ON dá direito a voto; PN tem prioridade no recebimento de dividendos e no reembolso de capital","ON só existe no Novo Mercado","PN tem tag along obrigatório de 100%"],a:1,e:"ON = voto (e tag along legal mínimo de 80%). PN = prioridade em dividendos/reembolso, normalmente sem voto. No Novo Mercado só há ON com tag along de 100%. Units = pacote de ON + PN.",f:"O que é tag along e por que protege o minoritário?"},
+{m:2,t:"Eventos corporativos",q:"Empresa faz um desdobramento (split) de 1 para 2. Para o acionista:",o:["O número de ações dobra e o valor total da posição não muda","Ele recebe dividendos em dobro","O valor da posição dobra","Ele perde metade das ações"],a:0,e:"Split aumenta a quantidade e reduz o preço unitário proporcionalmente; grupamento (inplit) é o inverso. Bonificação = ações novas vindas de reservas. Subscrição = direito de comprar novas ações. Nenhum deles muda, por si, o patrimônio.",f:"Por que a empresa faz split se não gera valor?"},
+{m:2,t:"IPO/OPA",q:"IPO e mercado secundário: assinale a correta.",o:["No IPO o dinheiro vai pra empresa (mercado primário); na bolsa, depois, o dinheiro troca de mãos entre investidores (secundário)","No IPO o dinheiro vai pro investidor antigo","A B3 é o mercado primário","OPA é a primeira venda de ações"],a:0,e:"Primário: emissão nova, recursos entram na empresa (IPO, follow-on primário). Secundário: negociação entre investidores, a empresa não recebe. OPA é oferta pública de AQUISIÇÃO (alguém quer comprar ações, ex.: fechar capital).",f:"Diferença entre IPO e OPA em uma frase."},
+{m:2,t:"COE",q:"Sobre o Certificado de Operações Estruturadas (COE):",o:["É garantido pelo FGC","Pode ter capital protegido ou capital em risco; é emitido por bancos e estruturado com derivativos; não tem FGC","É isento de IR","Só rende se a bolsa cair"],a:1,e:"COE: produto estruturado por bancos com derivativos. Capital protegido = devolve pelo menos o principal nominal (sem correção). Capital em risco = pode perder. IR pela tabela regressiva de renda fixa. Sem FGC. Exige DIE (documento de informações essenciais).",f:"'Capital protegido' significa que o cliente não perde nada? Pense na inflação."},
+{m:2,t:"Fundos",q:"Na estrutura de um fundo (Resolução CVM 175), quem é responsável por decidir quais ativos comprar e vender?",o:["Administrador","Gestor","Custodiante","Distribuidor"],a:1,e:"Gestor: decide a carteira. Administrador: responsável legal pelo fundo, documentos, assembleias. Ambos são prestadores ESSENCIAIS. Custodiante guarda os ativos; auditor audita; distribuidor vende as cotas.",f:"Cliente pergunta 'quem é o dono do fundo?'. Explique o conceito de condomínio e os papéis."},
+{m:2,t:"Fundos",q:"A Resolução CVM 175 trouxe como novidade estrutural:",o:["O fim dos fundos abertos","A divisão do fundo em classes e subclasses de cotas, com patrimônios segregados e possibilidade de responsabilidade limitada do cotista","A proibição de investir no exterior","A obrigatoriedade de come-cotas mensal"],a:1,e:"CVM 175: fundo pode ter várias classes (cada uma com patrimônio próprio) e subclasses (público/taxas diferentes). Permite responsabilidade limitada do cotista ao valor aportado. Ampliou investimento no exterior.",f:"Por que 'responsabilidade limitada' importa pro cotista de um fundo que fica com patrimônio negativo?"},
+{m:2,t:"Tributação fundos",q:"O come-cotas incide:",o:["Mensalmente, em todos os fundos","Em maio e novembro, nos fundos de renda fixa, multimercado e cambiais (abertos), com alíquota de 15% (longo prazo) ou 20% (curto prazo)","Só no resgate","Em fundos de ações, a 15%"],a:1,e:"Come-cotas: último dia útil de maio e novembro, antecipação de IR nos fundos abertos de RF, multimercado e cambial. Longo prazo (carteira média > 365 dias): 15%. Curto prazo: 20%. No resgate, acerta-se a diferença pela tabela. Fundos de AÇÕES: 15% só no resgate, sem come-cotas.",f:"Explique por que o come-cotas reduz a quantidade de cotas e não o valor da cota."},
+{m:2,t:"Fundos imobiliários",q:"Rendimentos de FII são isentos de IR para pessoa física quando:",o:["Sempre, sem condição","O fundo tem no mínimo 50 cotistas, as cotas são negociadas em bolsa e o cotista tem menos de 10% das cotas","O investidor é qualificado","O fundo é de tijolo"],a:1,e:"Três condições: ≥ 50 cotistas (lembre: era 50, pode cair como 100 em provas antigas; a lei de 2024 passou a 100 — fique atenta ao enunciado), cotas negociadas em bolsa/balcão organizado, cotista PF com < 10% das cotas. Ganho de capital na venda: 20%, sem isenção dos R$ 20 mil. FII distribui ≥ 95% do resultado semestral.",f:"Fundo de tijolo versus fundo de papel: o que cada um tem na carteira?"},
+{m:2,t:"Previdência",q:"Cliente faz declaração completa do IR e contribui ao INSS. Qual plano permite deduzir até 12% da renda bruta anual?",o:["VGBL","PGBL","Ambos","Nenhum"],a:1,e:"PGBL: deduz até 12% da renda bruta tributável (precisa declaração completa + INSS), mas o IR no resgate incide sobre o TOTAL. VGBL: não deduz, IR só sobre os RENDIMENTOS; indicado pra declaração simplificada, isentos, ou pra quem já passou dos 12%.",f:"Monte o raciocínio: cliente declara simplificado, qual plano e por quê?"},
+{m:2,t:"Previdência",q:"Na tabela regressiva de previdência, a alíquota após 10 anos de acumulação é:",o:["15%","10%","22,5%","35%"],a:1,e:"Regressiva (definitiva): 35% até 2 anos, 30%, 25%, 20%, 15%, e 10% acima de 10 anos (cai 5 pontos a cada 2 anos). Progressiva (compensável): 15% na fonte e ajuste na declaração pela tabela do IRPF. Desde 2024 a escolha do regime pode ser feita até o momento do primeiro resgate.",f:"Pra quem a regressiva é vantajosa: prazo curto ou longo?"},
+{m:2,t:"Previdência",q:"Portabilidade entre planos de previdência:",o:["Gera cobrança de IR a cada troca","Permite trocar de plano ou de seguradora sem resgate e sem IR, respeitada a carência mínima (60 dias) e sem mudar de modalidade (PGBL → PGBL, VGBL → VGBL)","Só é permitida dentro da mesma seguradora","Não existe"],a:1,e:"Portabilidade = mudar sem resgatar: sem IR, sem IOF. Interna (mesma seguradora) ou externa. Carência mínima de 60 dias. Não pode PGBL↔VGBL. Pode ir de progressivo pra regressivo, mas não o contrário.",f:"Por que portar é melhor que resgatar e aplicar de novo?"},
+{m:2,t:"Crédito",q:"Diferença entre empréstimo e financiamento:",o:["Não há diferença","No financiamento o recurso tem destinação específica (imóvel, veículo), geralmente com o bem em garantia; no empréstimo o uso é livre","Empréstimo é só para PJ","Financiamento não tem juros"],a:1,e:"Empréstimo: uso livre (pessoal, consignado, cheque especial). Financiamento: finalidade definida, bem como garantia (alienação fiduciária), juros menores. Leasing: arrendamento com opção de compra no fim.",f:"Por que o consignado tem juros mais baixos que o cheque especial?"},
+{m:2,t:"Crédito",q:"Sobre o cheque especial, é correto:",o:["É a modalidade mais barata de crédito","Os juros são limitados a 8% ao mês desde 2020 e o uso deve ser emergencial e de curtíssimo prazo","Não incide IOF","É isento de juros nos primeiros 30 dias em qualquer banco"],a:1,e:"Cheque especial: crédito rotativo pré-aprovado, caríssimo. BC limitou a 8% a.m. em 2020. Incide IOF. Junto com o rotativo do cartão, é a pior dívida pra manter. Orientação: trocar por crédito mais barato (consignado, pessoal).",f:"Cliente usa o cheque especial há 3 meses. O que você orienta?"},
+{m:2,t:"Serviços bancários",q:"Sobre o Pix:",o:["Funciona só em dias úteis em horário bancário","Criado pelo BC, funciona 24h todos os dias, liquidação em segundos, gratuito para pessoa física na maioria dos usos","É operado pela B3","Exige conta no mesmo banco do recebedor"],a:1,e:"Pix: arranjo de pagamento instantâneo do BC (2020), 24/7, liquidação em até 10 segundos pelo SPI. Chaves: CPF/CNPJ, e-mail, celular, aleatória. PF: gratuito para transferir e receber (exceto uso comercial). PJ pode ser tarifada.",f:"Diferença entre Pix e TED em horário e custo."},
+{m:2,t:"Serviços bancários",q:"Sobre tarifas bancárias de conta corrente para PF:",o:["O banco pode cobrar por qualquer serviço","Existem serviços essenciais gratuitos por lei (ex.: cartão de débito, 4 saques e 2 extratos por mês, 2 transferências entre contas do mesmo banco)","Tarifa é proibida no Brasil","Só o pacote completo é permitido"],a:1,e:"Resolução CMN 3.919: serviços essenciais sem tarifa (débito, saques, extratos, transferências limitadas, consultas pela internet). Pacotes e serviços diferenciados podem ser tarifados, com transparência prévia.",f:"Cliente reclama de tarifa de manutenção. O que ele pode pedir?"},
+{m:2,t:"Seguros",q:"Seguro prestamista é:",o:["Um seguro de automóvel","Um seguro que quita ou amortiza a dívida do segurado em caso de morte, invalidez ou desemprego, vinculado a uma operação de crédito","Um plano de previdência","Um seguro residencial obrigatório"],a:1,e:"Prestamista: protege o crédito (e o banco). Vida inteira: cobertura por toda a vida. Vida temporário: prazo determinado, mais barato. Patrimoniais: auto, residencial. Venda casada de seguro com crédito é proibida.",f:"Pode-se obrigar o cliente a contratar seguro pra liberar o empréstimo?"},
+{m:2,t:"Consórcio",q:"Em um consórcio:",o:["O consorciado recebe juros sobre as parcelas pagas","Não há juros; há taxa de administração, e a carta de crédito é contemplada por sorteio ou lance","A contemplação é garantida no 1º mês","É supervisionado pela CVM"],a:1,e:"Consórcio: grupo de pessoas que formam poupança coletiva. Sem juros, com taxa de administração (e fundo de reserva). Contemplação por sorteio ou lance. Supervisionado pelo BANCO CENTRAL. Não serve pra quem precisa do bem imediatamente.",f:"Consórcio versus financiamento: quando cada um faz sentido?"},
+{m:2,t:"Rating",q:"Uma agência de rating rebaixou uma debênture de 'grau de investimento' para 'grau especulativo'. Para o investidor isso significa:",o:["Maior risco de crédito percebido; o título tende a cair de preço e a exigir prêmio maior","Que o título ficou isento de IR","Que a debênture virou ação","Nada, rating é só opinião"],a:0,e:"Rating mede risco de crédito (capacidade de pagar). Rebaixamento → mercado exige mais retorno → preço cai. É opinião, mas opinião que move preço e limita fundos que só podem ter grau de investimento.",f:"O rating garante que o emissor vai pagar?"},
+{m:2,t:"Fundos tipos",q:"Um fundo classificado como 'Renda Fixa' deve ter, no mínimo, que percentual da carteira em ativos de renda fixa?",o:["51%","67%","80%","95%"],a:2,e:"Renda fixa: ≥ 80% em RF (juros/inflação). Ações: ≥ 67% em ações. Cambial: ≥ 80% em moeda estrangeira. Multimercado: sem concentração obrigatória. Lembre 80/67/80.",f:"Recite os percentuais mínimos de RF, Ações e Cambial."},
+
+/* ===== MÓDULO 3 ===== */
+{m:3,t:"Suitability",q:"Cliente de perfil conservador insiste em comprar um fundo de ações alavancado. A conduta correta do profissional é:",o:["Recusar a ordem definitivamente","Alertar formalmente sobre a inadequação ao perfil e, se o cliente insistir, obter declaração expressa de ciência antes de executar","Executar sem comentar, pois a ordem é do cliente","Mudar o perfil do cliente para arrojado no sistema"],a:1,e:"Suitability (Res. CVM 30 + Código Anbima): verificar adequação ao perfil, objetivo e situação financeira. Produto inadequado → alerta formal. Cliente insiste → declaração expressa de ciência. Perfil deve ser atualizado a cada 24 meses. Nunca ajustar o perfil pra encaixar o produto.",f:"Explique os 3 pilares do suitability (perfil, objetivo, situação financeira)."},
+{m:3,t:"Suitability",q:"O questionário de perfil do investidor (API) deve ser atualizado em prazo máximo de:",o:["6 meses","12 meses","24 meses","Nunca, é feito uma vez"],a:2,e:"Prazo máximo de 24 meses pra atualizar perfil e as informações que o embasam. Se o perfil estiver desatualizado, a instituição não pode recomendar produtos (só executar ordens com alerta).",f:"O que acontece se o cliente se recusa a responder o questionário?"},
+{m:3,t:"Ciclo de vida",q:"Cliente de 68 anos, aposentado, vive da renda dos investimentos. Em qual fase do ciclo de vida ele está e que prioridade deve guiar a carteira?",o:["Acumulação; buscar máximo crescimento","Distribuição de renda; priorizar preservação, liquidez e geração de renda","Crescimento patrimonial; concentrar em ações","Qualquer fase; depende só do perfil"],a:1,e:"Fases: acumulação (jovem, pouco patrimônio, pode arriscar) → crescimento (patrimônio relevante, ainda acumulando) → preservação (perto da aposentadoria) → distribuição (vive do patrimônio). Quanto menor o horizonte, menor a exposição a risco.",f:"Por que idade e horizonte de investimento andam juntos?"},
+{m:3,t:"Finanças pessoais",q:"Reserva de emergência deve ser aplicada em:",o:["Ações de dividendos","Produtos de alta liquidez e baixo risco (Tesouro Selic, CDB com liquidez diária, fundo DI)","Previdência privada","Imóveis"],a:1,e:"Reserva: cobrir alguns meses de despesas (comum: 3 a 12, conforme estabilidade da renda) em ativos que viram dinheiro em D+0/D+1 sem perda. Nada de prefixado longo, ações ou previdência.",f:"Por que Tesouro Prefixado longo NÃO serve pra reserva de emergência?"},
+{m:3,t:"Finanças pessoais",q:"No balanço patrimonial pessoal, o patrimônio líquido é:",o:["Receitas menos despesas","Ativos menos passivos (bens e direitos menos dívidas)","Só o dinheiro investido","O salário anual"],a:1,e:"Balanço: ativos (de uso, como casa e carro; e não uso, como investimentos) menos passivos (dívidas) = PL. Fluxo de caixa é outra coisa: receitas − despesas no período (define capacidade de poupança). Índice de endividamento = dívidas / ativos.",f:"Diferença entre balanço (foto) e fluxo de caixa (filme)?"},
+{m:3,t:"IRPF",q:"Sobre a declaração de IRPF, modelo completo versus simplificado:",o:["O simplificado permite deduzir PGBL","O completo permite deduções legais (dependentes, saúde, educação, PGBL); o simplificado aplica desconto padrão de 20% com teto, sem deduções","O completo é obrigatório pra todos","Não há diferença de imposto"],a:1,e:"Completo: deduz despesas comprovadas (inclusive PGBL até 12%). Simplificado: desconto padrão de 20% limitado a um teto. Vale usar o que resulta em menos imposto. Por isso PGBL só faz sentido no completo.",f:"Ligue isso à escolha PGBL × VGBL."},
+{m:3,t:"PLD/FT",q:"As três fases clássicas da lavagem de dinheiro, em ordem, são:",o:["Integração, ocultação, colocação","Colocação, ocultação (estratificação), integração","Depósito, saque, transferência","Fraude, evasão, sonegação"],a:1,e:"Colocação: dinheiro sujo entra no sistema (depósitos fracionados, compra de bens). Ocultação/estratificação: camadas de transações pra apagar a origem. Integração: volta como dinheiro aparentemente limpo (empresa, imóvel).",f:"Dê um exemplo concreto de cada fase."},
+{m:3,t:"PLD/FT",q:"Operação suspeita identificada pela instituição deve ser comunicada ao COAF:",o:["Em até 30 dias, com aviso ao cliente","Em até 24 horas da conclusão da análise, SEM dar ciência ao cliente","Só se o cliente autorizar","Nunca; só a Polícia Federal pode comunicar"],a:1,e:"Lei 9.613/98 (alterada pela 12.683/12): comunicação ao COAF em até 24h após concluir que é suspeita, sem informar o envolvido. Comunicação de boa-fé não gera responsabilidade. Registros de operações e cadastro guardados por no mínimo 5 anos (10 anos em alguns normativos do BC). Operações em espécie ≥ R$ 50 mil: comunicação automática. Se não houver nada a comunicar no ano, faz-se a 'comunicação negativa'.",f:"Por que o profissional não pode avisar o cliente da comunicação?"},
+{m:3,t:"PLD/FT",q:"O princípio 'Conheça seu cliente' (KYC) exige, entre outras coisas:",o:["Aceitar qualquer cliente desde que pague tarifa","Cadastro completo e atualizado, análise da capacidade financeira e atenção reforçada a PEP (pessoas expostas politicamente)","Só o CPF","Investigação policial prévia"],a:1,e:"KYC: identificar, qualificar, entender origem dos recursos e compatibilidade das movimentações com a renda. PEP (políticos, altos cargos, familiares e estreitos colaboradores) exigem diligência reforçada. Cadastro desatualizado é risco pra instituição e pro profissional.",f:"Cliente com renda declarada de R$ 3 mil movimenta R$ 200 mil em espécie. O que isso aciona?"},
+{m:3,t:"Crimes",q:"Um diretor compra ações da própria empresa sabendo, antes do mercado, que ela será vendida por preço alto. Isso configura:",o:["Front running","Insider trading (uso indevido de informação privilegiada, art. 27-D da Lei 6.385)","Churning","Spoofing"],a:1,e:"Insider: negociar com informação relevante não divulgada. Primário = quem tem acesso pela função; secundário = quem recebe a dica. Front running = operar na frente da ordem do cliente. Churning = girar a carteira pra gerar corretagem. Spoofing/layering = ordens falsas pra manipular preço. Manipulação é o art. 27-C; exercício irregular, 27-E.",f:"Diferencie insider primário e secundário."},
+{m:3,t:"Crimes",q:"Um assessor coloca ordens grandes de compra que não pretende executar, só pra inflar o preço, e as cancela depois de vender. Isso é:",o:["Insider trading","Spoofing / layering (manipulação de preços)","Money pass","Prática legítima de formador de mercado"],a:1,e:"Spoofing: ordens falsas pra enganar o livro. Layering: várias camadas de ordens falsas. Money pass: transferir dinheiro entre partes via operações combinadas (condições artificiais). Churning: excesso de giro. Todos ilícitos (Res. CVM 62).",f:"Explique money pass e churning em uma frase cada."},
+{m:3,t:"LGPD",q:"A LGPD (Lei 13.709/2018):",o:["Só se aplica a bancos públicos","Regula o tratamento de dados pessoais por qualquer pessoa ou empresa, exigindo base legal (como consentimento), finalidade e segurança; fiscalizada pela ANPD","Substitui o sigilo bancário","Proíbe bancos de guardar dados"],a:1,e:"LGPD: dados pessoais e sensíveis, princípios (finalidade, necessidade, transparência), direitos do titular (acesso, correção, exclusão), bases legais. Autoridade: ANPD. Sigilo bancário é outra lei (LC 105/2001) e continua valendo.",f:"Qual a diferença entre LGPD e sigilo bancário?"},
+{m:3,t:"Sigilo bancário",q:"O sigilo bancário (LC 105/2001) pode ser quebrado:",o:["A pedido de qualquer parente do cliente","Por ordem judicial, por CPI, ou nas hipóteses legais (ex.: troca de informações com a Receita, comunicações de PLD)","Nunca","Por decisão do gerente"],a:1,e:"Sigilo é regra; exceções legais: decisão judicial, CPI, Receita Federal nos termos da lei, comunicação ao COAF/BC. Quebra indevida é crime. Comunicar operação suspeita ao COAF não viola sigilo.",f:"Comunicar ao COAF quebra sigilo? Por quê não?"},
+{m:3,t:"Ética",q:"Um gerente recebe de um cliente um presente de alto valor por 'ter ajudado' num investimento. Pelo Código de Conduta Ética da Anbima, ele deve:",o:["Aceitar, se não for em dinheiro","Recusar ou reportar conforme a política da instituição, por configurar potencial conflito de interesse","Aceitar e dividir com a equipe","Aceitar se o cliente for qualificado"],a:1,e:"Código de Ética Anbima: integridade, transparência, diligência, evitar conflitos de interesse. Benefícios e incentivos podem distorcer a recomendação. Medidas: políticas claras, divulgação, segregação de funções, comitês de compliance.",f:"Cite 3 medidas de gestão de conflito de interesse."},
+{m:3,t:"Ética",q:"Uma candidata descobre o conteúdo exato de questões da prova da Anbima e compartilha num grupo. Isso:",o:["É permitido como material de estudo","Viola o Código de Conduta Ética (regras para candidatos) e pode levar à anulação e impedimento de novas provas","É legal porque a prova é pública","Só é problema se ela for aprovada"],a:1,e:"Regras para candidatos: não divulgar conteúdo das provas, não fraudar, não se passar por outro. Consequências: anulação, suspensão de certificação, impedimento temporário. O código vale pra candidatos E pra certificados.",f:"Quais são os deveres do profissional já certificado em relação ao código?"},
+{m:3,t:"Atendimento",q:"Cliente chega irritado porque um produto rendeu menos que o esperado. A técnica de atendimento mais adequada envolve:",o:["Interromper e explicar que ele deveria ter lido o regulamento","Escuta ativa, reconhecer a frustração, revisar as expectativas que foram criadas e propor solução proativa","Transferir para outro setor sem explicação","Oferecer outro produto de maior risco pra compensar"],a:1,e:"Técnicas: escuta ativa, personalização, solução proativa, gerenciamento de expectativas, educação continuada. O erro raiz costuma ser expectativa mal alinhada na venda. Empurrar produto novo pra 'compensar' é conduta inadequada.",f:"O que é 'gerenciamento de expectativas' na hora da venda?"},
+{m:3,t:"Riscos profissionais",q:"Um gerente executa uma aplicação no fundo errado por erro de digitação, gerando prejuízo ao cliente. Esse é um risco:",o:["Operacional","Regulatório","De imagem apenas","Legal apenas"],a:0,e:"Operacional: falhas de processo, pessoas, sistemas. Regulatório: descumprir norma (multa do BC/CVM). Legal: ações judiciais, contratos. De imagem: reputação. Um erro operacional pode desencadear os outros três.",f:"Como um único erro operacional vira risco de imagem?"},
+{m:3,t:"Diversificação",q:"Diversificar a carteira serve principalmente para:",o:["Eliminar todo o risco","Reduzir o risco não sistemático (específico de cada ativo); o risco sistemático (de mercado) permanece","Garantir retorno acima do CDI","Evitar impostos"],a:1,e:"Risco diversificável (não sistemático): ligado à empresa/setor, cai quando você combina ativos pouco correlacionados. Risco sistemático: afeta tudo (juros, crise), não some com diversificação. Quanto menor a correlação entre ativos, maior o benefício.",f:"Comprar 10 ações de bancos é diversificar bem? Por quê?"},
+
+/* ===== MÓDULO 4 ===== */
+{m:4,t:"ESG",q:"A sigla ESG refere-se a:",o:["Economia, Sociedade e Governo","Ambiental, Social e Governança","Ética, Sustentabilidade e Gestão","Energia, Solo e Gás"],a:1,e:"Environmental (clima, resíduos, água), Social (trabalho, diversidade, comunidade), Governance (conselho, transparência, anticorrupção). PRI = Princípios para o Investimento Responsável (ONU). No Brasil, a Anbima tem regras pra fundo se chamar 'IS' (Investimento Sustentável) versus fundo que apenas 'integra questões ESG'.",f:"Qual a diferença entre fundo IS e fundo que integra ESG?"},
+{m:4,t:"ESG",q:"Um fundo quer usar o sufixo 'IS' (Investimento Sustentável) no nome. Pela autorregulação Anbima ele precisa:",o:["Apenas declarar intenção","Ter objetivo de investimento sustentável como foco, metodologia documentada, monitoramento e transparência; se só considera fatores ESG sem esse objetivo central, é 'fundo que integra ESG'","Investir só em energia solar","Ser fundo de ações"],a:1,e:"Regras Anbima (e CVM 175, art. 49): o nome 'IS' exige que a sustentabilidade seja o objetivo, com política, diligência e relatórios. Integrar ESG é considerar os fatores na análise sem que sejam o objetivo. Evita greenwashing.",f:"O que é greenwashing e por que a regra existe?"},
+{m:4,t:"DeFi",q:"Smart contract é:",o:["Um contrato assinado digitalmente no cartório","Um programa autoexecutável registrado em blockchain, que cumpre regras automaticamente quando as condições são atendidas","Um fundo de criptomoedas","Um tipo de CDB digital"],a:1,e:"Smart contract roda em blockchain (ex.: Ethereum) e executa sozinho: empréstimos, DEX (corretoras descentralizadas), seguros paramétricos, DAOs (governança). Riscos: bugs no código, falta de regulação, segurança de chaves.",f:"Dê um exemplo de smart contract em seguro."},
+{m:4,t:"DeFi",q:"Tokenização de um imóvel significa:",o:["Vender o imóvel por criptomoeda","Representar frações da propriedade (ou de seus direitos) como tokens digitais em blockchain, permitindo fracionar e negociar","Registrar o imóvel no cartório digital","Converter o imóvel em NFT de arte"],a:1,e:"Tokenização: ativo real vira tokens (fungíveis ou não). Benefícios: fracionamento, liquidez, custo menor. Riscos: segurança, regulação, tecnologia. NFT = token único (não fungível). Stablecoin = cripto atrelada a moeda. DREX = moeda digital do Banco Central (CBDC).",f:"Diferença entre stablecoin e DREX?"},
+{m:4,t:"Open Finance",q:"O Open Finance, no Brasil:",o:["Obriga o cliente a compartilhar dados","Permite que o cliente, com consentimento, compartilhe seus dados financeiros entre instituições, estimulando concorrência e ofertas melhores; regulado por BC/CMN (Resolução Conjunta 1/2020)","É um produto de investimento","Só existe pra empresas"],a:1,e:"Pilar: o dado é do cliente. Consentimento específico, revogável, com prazo. Fases: dados de produtos → cadastrais/transacionais → iniciação de pagamento → seguros/previdência/investimentos (open insurance, open investment). Benefícios: score mais justo, portabilidade, concorrência.",f:"Por que o Open Finance pode baixar os juros do cliente?"},
+{m:4,t:"IA",q:"IA generativa aplicada ao atendimento bancário (chatbots) traz como principal cuidado:",o:["Nenhum, a IA é infalível","Garantir precisão da informação, proteção de dados (LGPD), transparência de que é uma máquina e supervisão humana nas decisões relevantes","Substituir totalmente a equipe","Nunca pode ser usada no SFN"],a:1,e:"IA generativa cria texto/imagem a partir de padrões (pode 'alucinar'). Modelos preditivos estimam risco (crédito, fraude). Na prática: chatbots, assistentes, detecção de fraude. Cuidados: viés, LGPD, explicabilidade, não dar recomendação de investimento sem suitability.",f:"Diferença entre IA generativa e modelo preditivo em uma frase."},
+{m:4,t:"Fintechs",q:"Sandbox regulatório (BC e CVM) é:",o:["Um fundo de investimento em startups","Um ambiente controlado onde empresas testam inovações com regras flexibilizadas, por tempo determinado e sob supervisão","Uma caixa de areia na agência","Um tipo de criptomoeda"],a:1,e:"Sandbox: autorização temporária pra testar modelos inovadores com limites (nº de clientes, volume) e acompanhamento do regulador. Fintechs de crédito: SCD (empresta recurso próprio) e SEP (peer-to-peer). Desintermediação: cliente acessa o produto sem o banco tradicional no meio.",f:"Diferença entre SCD e SEP?"},
+{m:4,t:"Meios de pagamento",q:"No arranjo de pagamento com cartão, quem é a 'adquirente' (credenciadora)?",o:["O banco que emite o cartão","A empresa que credencia o lojista e processa a transação na maquininha (ex.: Cielo, Rede, Stone)","A bandeira (Visa, Mastercard)","O consumidor"],a:1,e:"Papéis: emissor (banco do cliente), bandeira (regras do arranjo), adquirente/credenciadora (lado do lojista), subadquirente (intermediário que usa a adquirente, ex.: gateways). Arranjos de pagamento são regulados pelo BC.",f:"Monte a cadeia: cliente passa o cartão, quem fala com quem?"}
+];
+
+/* ---------- ESTADO ---------- */
+const KEY="cpa-sprint-v1";
+let S={hist:{},cards:{},sims:[],diag:null,prefs:{palette:"",size:"m"},upd:0,doneMods:{}}; // hist[qid]={r:acertos,w:erros,last}; cards[qid]={box,due}
+function load(){try{const s=localStorage.getItem(KEY);if(s)S=Object.assign(S,JSON.parse(s))}catch(e){}}
+let saveT=null,remoteDoc=null,syncState="local";
+function save(){S.upd=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+  if(remoteDoc){clearTimeout(saveT);saveT=setTimeout(pushRemote,1500)}}
+async function pushRemote(){if(!remoteDoc)return;try{await remoteDoc.set(JSON.parse(JSON.stringify(S)));setSync("cloud")}catch(e){setSync("err")}}
+function setSync(st){syncState=st;const el=document.getElementById("sync-status");if(!el)return;
+  el.textContent=st==="cloud"?"Salvo neste aparelho e na nuvem (conta logada).":st==="err"?"Salvo neste aparelho. A nuvem não aceitou a gravação; use o código de backup pra trocar de aparelho.":"Salvo neste aparelho (navegador). Guarde um código de backup de vez em quando.";}
+// nuvem: cada pessoa logada tem um espaço privado; mescla pelo que foi atualizado por último
+async function initCloud(){
+  try{
+    if(!window.claude||!claude.use)return;
+    const [db,user]=await Promise.all([claude.use("db"),claude.use("user")]);
+    if(!db||!user)return;const id=await user.id();if(!id)return;
+    remoteDoc=db.doc("data/users/"+id+"/progresso");
+    const snap=await remoteDoc.get();
+    if(snap.exists){const R=snap.data();if((R.upd||0)>(S.upd||0)){S=Object.assign(S,R);try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}applyPrefs();renderHome();renderRev()}}
+    await pushRemote();
+  }catch(e){setSync("err")}
+}
+load();
+/* backup por código */
+function exportBk(){const code=btoa(unescape(encodeURIComponent(JSON.stringify(S))));const out=document.getElementById("bk-out");out.value=code;out.hidden=false;
+  const done=()=>{document.getElementById("sync-status").textContent="Código copiado. Cole no WhatsApp pra você mesma e guarde."};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(done).catch(()=>{out.select()})}else out.select()}
+function importBk(){const t=document.getElementById("bk-text").value.trim(),msg=document.getElementById("bk-msg");try{const R=JSON.parse(decodeURIComponent(escape(atob(t))));if(!R.hist)throw 0;
+  // mescla: soma acertos/erros, mantém cards e simulados dos dois
+  for(const k in R.hist){const a=S.hist[k]||{r:0,w:0};const b=R.hist[k];S.hist[k]={r:a.r+b.r,w:a.w+b.w,last:Math.max(a.last||0,b.last||0)}}
+  for(const k in R.cards){if(!S.cards[k]||R.cards[k].due>S.cards[k].due)S.cards[k]=R.cards[k]}
+  S.sims=S.sims.concat(R.sims||[]).sort((a,b)=>a.at-b.at);if(R.prefs)S.prefs=R.prefs;save();applyPrefs();renderHome();renderRev();msg.textContent="Restaurado e mesclado com o que já tinha aqui."}catch(e){msg.textContent="Código inválido. Confere se colou inteiro."}}
+/* preferências visuais */
+const PAL=[["","Automático (segue o celular)","#f6f4ee"],["papel","Papel","#f6f4ee"],["sepia","Sépia","#f3e9d8"],["verde","Verde suave","#e9f1ea"],["noite","Noite","#1f2225"],["preto","Preto total","#000000"],["contraste","Alto contraste","#ffffff"]];
+function applyPrefs(){const p=S.prefs||{};const r=document.documentElement;if(p.palette)r.setAttribute("data-palette",p.palette);else r.removeAttribute("data-palette");r.setAttribute("data-size",p.size||"m");
+  const sw=document.getElementById("swatches");if(sw){sw.innerHTML=PAL.map(([k,n,c])=>`<button class="sw ${(p.palette||"")===k?"on":""}" onclick="setPal('${k}')"><i style="background:${c}"></i>${n}</button>`).join("")}
+  document.querySelectorAll("#sizes button").forEach(b=>b.classList.toggle("on",b.dataset.s===(p.size||"m")))}
+function setPal(k){S.prefs=S.prefs||{};S.prefs.palette=k;save();applyPrefs()}
+document.addEventListener("click",e=>{const b=e.target.closest("#sizes button");if(b){S.prefs=S.prefs||{};S.prefs.size=b.dataset.s;save();applyPrefs()}});
+
+/* ---------- UTIL ---------- */
+const $=s=>document.querySelector(s);
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function byMod(m){return Q.map((q,i)=>({q,i})).filter(x=>x.q.m===m)}
+// sorteia n questões respeitando pesos; prioriza menos vistas/erradas
+function sample(n,mod){
+  if(mod){return shuffle(byMod(mod)).slice(0,n).map(x=>x.i)}
+  const quota={1:Math.round(n*.2),2:Math.round(n*.4),3:Math.round(n*.3),4:0};quota[4]=n-quota[1]-quota[2]-quota[3];
+  let out=[];
+  for(const m of [1,2,3,4]){
+    const pool=shuffle(byMod(m)).sort((a,b)=>score(a.i)-score(b.i));
+    out=out.concat(pool.slice(0,quota[m]).map(x=>x.i));
+  }
+  return interleave(out);
+}
+function score(i){const h=S.hist[i];if(!h)return 0;return (h.r-h.w*2)+Math.random()*.5}
+// intercala por módulo pra não vir em bloco
+function interleave(ids){const groups={};ids.forEach(i=>{(groups[Q[i].m]=groups[Q[i].m]||[]).push(i)});const out=[];let more=true;while(more){more=false;for(const m of shuffle([1,2,3,4])){if(groups[m]&&groups[m].length){out.push(groups[m].pop());more=true}}}return out}
+function record(i,ok){const h=S.hist[i]=S.hist[i]||{r:0,w:0};ok?h.r++:h.w++;h.last=Date.now();if(!ok)addCard(i,0);save()}
+// Leitner com intervalos em horas (sprint de 3 dias): 0 → 4h → 20h → 48h
+const INT=[0,4,20,48];
+function addCard(i,box){const c=S.cards[i]||{box:0,due:0};c.box=box;c.due=Date.now()+INT[Math.min(box,3)]*3600e3;S.cards[i]=c;save()}
+// módulo "concluído": ≥75% de acerto com pelo menos 8 respostas (5 no módulo 4). Guarda a data; pode voltar a 'em aberto' se cair
+function checkDone(){const newly=[];S.doneMods=S.doneMods||{};for(const m of [1,2,3,4]){let r=0,w=0;byMod(m).forEach(x=>{const h=S.hist[x.i];if(h){r+=h.r;w+=h.w}});const min=m===4?5:8;const ok=r+w>=min&&r/(r+w)>=.75;
+  if(ok&&!S.doneMods[m]){S.doneMods[m]=Date.now();newly.push(m)}else if(!ok&&S.doneMods[m]&&r/(r+w)<.65)delete S.doneMods[m]}save();return newly}
+function renderDone(){const el=document.getElementById("done-banner");if(!el)return;const d=S.doneMods||{};const ms=Object.keys(d);if(!ms.length){el.innerHTML="";return}
+  el.innerHTML=`<div class="done"><b>Módulos concluídos:</b> ${ms.map(m=>`M${m} ${MODS[m].n}`).join(" · ")}. ${ms.length===4?"Os quatro fechados. Agora é Revisão e um simulado pra confirmar.":"Mantém com a Revisão e concentra o Treino nos que faltam."}</div>`}
+function readiness(m){let r=0,w=0;byMod(m).forEach(x=>{const h=S.hist[x.i];if(h){r+=h.r;w+=h.w}});if(r+w===0)return null;return r/(r+w)}
+
+/* ---------- NAV ---------- */
+function go(v){
+  document.querySelectorAll("section.view").forEach(s=>s.hidden=true);
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+  if(v==="sim"){$("#v-quiz").hidden=false;renderSimSetup();}
+  else if(v==="quiz"){$("#v-quiz").hidden=false;renderTrainSetup();}
+  else $("#v-"+v).hidden=false;
+  if(v==="home")renderHome();if(v==="rev")renderRev();if(v==="sum")renderSum();
+  window.scrollTo({top:0});
+}
+
+/* ---------- HOME ---------- */
+function renderHome(){
+  renderDone();
+  let html="",tot=0,cnt=0;
+  for(const m of [1,2,3,4]){const p=readiness(m);let cls="",lbl="sem dados";if(p!==null){tot+=p*MODS[m].w;cnt+=MODS[m].w;cls=p>=.75?"ok":p>=.6?"warn":"bad";lbl=Math.round(p*100)+"%"}
+    html+=`<div class="mod"><span class="w">${Math.round(MODS[m].w*100)}%</span><div class="name">${m}. ${MODS[m].n}<small>${MODS[m].d}</small><div class="bar"><i class="${cls}" style="width:${p===null?0:p*100}%"></i></div></div><span class="pct">${lbl}</span></div>`}
+  $("#mods").innerHTML=html;
+  const n=Object.keys(S.hist).length;
+  if(cnt>0){const g=Math.round(tot/cnt*100);$("#overall").textContent=g+"%";
+    const v=g>=78?["ok","Pronta. Mantém o ritmo."]:g>=70?["warn","No limite. Margem fina: foque nos módulos 2 e 3."]:["bad","Ainda não. Dá tempo, mas é sprint de verdade."];
+    $("#verdict").innerHTML=`<span class="pill ${v[0]}">${v[1]}</span>`;
+    const last=S.sims.length?S.sims[S.sims.length-1]:null;
+    $("#home-note").textContent=`${n} questões distintas já respondidas aqui.`+(last?` Último simulado: ${last.score}/50 (${last.score>=35?"aprovada":"reprovada"}).`:" Nenhum simulado ainda.")+" Na prova real a nota de corte é 70%; aqui, mire 78% pra ter folga.";
+  } else {$("#overall").textContent="–";$("#verdict").innerHTML="";$("#home-note").textContent="Nenhuma resposta registrada ainda. Faça o Diagnóstico pra calibrar.";}
+}
+
+/* ---------- MOTOR DE QUIZ ---------- */
+let R=null; // {ids, i, answers, mode, start, limit, timer}
+function startTrain(){const n=+$("#t-n").value,mod=+$("#t-mod").value;begin(sample(n,mod),"train")}
+function startDiag(){go("quiz");begin(sample(20,0),"diag")}
+function startSim(){begin(sample(50,0),"sim",150*60)}
+function begin(ids,mode,limit){
+  R={ids,i:0,answers:[],mode,start:Date.now(),limit};
+  $("#quiz-setup").hidden=true;$("#quiz-result").hidden=true;$("#quiz-run").hidden=false;
+  $("#q-timer").hidden=!limit;if(R.timer)clearInterval(R.timer);
+  if(limit){R.timer=setInterval(tick,1000);tick()}
+  showQ();
+}
+function tick(){const left=R.limit-Math.floor((Date.now()-R.start)/1000);const t=$("#q-timer");if(left<=0){clearInterval(R.timer);finish();return}
+  const h=Math.floor(left/3600),m=Math.floor(left%3600/60),s=left%60;t.textContent=`${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;t.classList.toggle("low",left<600)}
+function showQ(){
+  const idx=R.ids[R.i],q=Q[idx];
+  $("#q-count").textContent=`${R.i+1} / ${R.ids.length}`;
+  $("#q-mod").textContent=`M${q.m} · ${q.t}`;
+  $("#q-prog").style.width=(R.i/R.ids.length*100)+"%";
+  $("#q-text").textContent=q.q;
+  const letters="ABCD";
+  $("#q-opts").innerHTML=q.o.map((o,k)=>`<button class="opt" id="opt-${k}" onclick="pick(${k})"><span class="l">${letters[k]}</span><span>${o}</span></button>`).join("");
+  $("#q-fb").hidden=true;$("#q-fb").innerHTML="";$("#q-next").disabled=true;
+  $("#q-next").textContent=R.i===R.ids.length-1?"Finalizar":"Próxima";
+}
+function pick(k){
+  const idx=R.ids[R.i],q=Q[idx];
+  if(R.answers[R.i]!==undefined&&R.mode!=="sim")return;
+  R.answers[R.i]=k;
+  document.querySelectorAll(".opt").forEach(b=>b.classList.remove("sel"));
+  $("#opt-"+k).classList.add("sel");
+  $("#q-next").disabled=false;
+  if(R.mode==="sim")return; // simulado: feedback só no fim
+  const ok=k===q.a;record(idx,ok);
+  document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
+  $("#opt-"+q.a).classList.add("right");if(!ok)$("#opt-"+k).classList.add("wrong");
+  const fb=$("#q-fb");fb.hidden=false;
+  fb.innerHTML=`<div class="fb ${ok?"good":"badfb"}"><b>${ok?"Certo.":"Errado."}</b> <span class="why">${q.e}</span></div>
+  <div class="feyn"><p><b>Agora, Feynman:</b> ${q.f} Fale em voz alta, como se fosse pra um cliente que não entende nada. Depois se avalie:</p>
+  <div class="row"><button class="btn ghost sm" onclick="feyn(${idx},0)">Travei</button><button class="btn ghost sm" onclick="feyn(${idx},1)">Mais ou menos</button><button class="btn ghost sm" onclick="feyn(${idx},2)">Expliquei liso</button></div></div>`;
+}
+function feyn(idx,lvl){
+  // travou → card volta já; mais ou menos → 4h; liso e acertou → 20h (só se já era card)
+  const c=S.cards[idx];
+  if(lvl===0)addCard(idx,0);else if(lvl===1)addCard(idx,1);else if(c)addCard(idx,Math.min(c.box+1,3));
+  const f=$("#q-fb .feyn");f.innerHTML=`<p class="muted">Anotado. ${lvl===0?"Esse card volta na Revisão em instantes.":lvl===1?"Volta na Revisão em ~4h.":"Boa. Se era card, ele sobe de nível."}</p>`;
+}
+function nextQ(){if(R.i<R.ids.length-1){R.i++;showQ()}else finish()}
+function quitQuiz(){if(R&&R.timer)clearInterval(R.timer);R=null;$("#quiz-run").hidden=true;$("#quiz-setup").hidden=false}
+function finish(){
+  if(R.timer)clearInterval(R.timer);
+  let score=0;const perM={1:[0,0],2:[0,0],3:[0,0],4:[0,0]};
+  R.ids.forEach((idx,n)=>{const q=Q[idx],ok=R.answers[n]===q.a;if(ok)score++;perM[q.m][0]+=ok?1:0;perM[q.m][1]++;if(R.mode==="sim")record(idx,ok)});
+  if(R.mode==="sim"){S.sims.push({score,at:Date.now()});save()}
+  if(R.mode==="diag"){S.diag={score,at:Date.now()};save()}
+  const total=R.ids.length,pct=Math.round(score/total*100);
+  const pass=R.mode==="sim"?score>=35:pct>=70;
+  let html=`<h2>${R.mode==="sim"?"Resultado do simulado":R.mode==="diag"?"Diagnóstico":"Fim do treino"}</h2>
+  <div class="card"><div class="row" style="justify-content:space-between;align-items:flex-end"><div><div class="big">${score}<span style="font-size:1.3rem;color:var(--mute)">/${total}</span></div><div class="muted">${pct}% de acerto</div></div>
+  <span class="pill ${pass?"ok":"bad"}">${R.mode==="sim"?(pass?"APROVADA (≥35)":"REPROVADA (<35)"):(pass?"Acima do corte":"Abaixo do corte")}</span></div>
+  <div class="result-grid">${[1,2,3,4].map(m=>{const [r,t]=perM[m];const p=t?Math.round(r/t*100):0;return `<div class="card"><div class="n">${r}/${t}</div><div class="t">M${m} ${MODS[m].n}</div><div class="bar"><i class="${p>=75?"ok":p>=60?"warn":"bad"}" style="width:${p}%"></i></div></div>`}).join("")}</div>`;
+  // pior módulo
+  const worst=[1,2,3,4].filter(m=>perM[m][1]).sort((a,b)=>perM[a][0]/perM[a][1]-perM[b][0]/perM[b][1])[0];
+  if(worst)html+=`<p><b>Ataque primeiro:</b> Módulo ${worst} (${MODS[worst].n}), vale ${Math.round(MODS[worst].w*100)}% da prova. Leia o Resumão dele e faça um Treino focado.</p>`;
+  // resumo personalizado da rodada
+  html+=`<div class="summ"><h3 style="margin-top:0">Resumo pra você, Patricia</h3>`;
+  for(const m of [1,2,3,4]){if(!perM[m][1])continue;
+    const wrong=R.ids.filter((idx,n)=>Q[idx].m===m&&R.answers[n]!==Q[idx].a);
+    const topics=[...new Set(wrong.map(i=>Q[i].t))];
+    html+=`<p><b>M${m} ${MODS[m].n}:</b> ${perM[m][0]}/${perM[m][1]}. `+(wrong.length?`Revisar: ${topics.join(", ")}.`:`Limpo nesta rodada.`)+`</p>`;
+    if(wrong.length)html+=`<ul>${wrong.slice(0,4).map(i=>`<li><b>${Q[i].t}:</b> ${Q[i].e.split(". ")[0]}.</li>`).join("")}</ul>`;
+  }
+  const newly=checkDone();
+  if(newly.length)html+=newly.map(m=>`<div class="done"><b>Módulo ${m} concluído.</b> Você está acima de 75% em ${MODS[m].n} com volume suficiente. Agora ele só precisa de manutenção: os cards da Revisão.</div>`).join("");
+  html+=`</div>`;
+  if(R.mode==="sim"){html+=`<h3>Gabarito comentado</h3>`+R.ids.map((idx,n)=>{const q=Q[idx],k=R.answers[n],ok=k===q.a;return `<details><summary><span>${n+1}. ${ok?"✓":"✗"} ${q.t}</span><span class="pill ${ok?"ok":"bad"}">M${q.m}</span></summary><div class="in"><p>${q.q}</p><p><b>Correta:</b> ${"ABCD"[q.a]}) ${q.o[q.a]}${k!==undefined&&!ok?`<br><b>Você marcou:</b> ${"ABCD"[k]}) ${q.o[k]}`:k===undefined?"<br><b>Em branco</b>":""}</p><p class="muted">${q.e}</p></div></details>`}).join("")}
+  html+=`<div class="row" style="margin-top:14px"><button class="btn" onclick="go('home')">Ver painel</button><button class="btn ghost" onclick="go('rev')">Ir pra Revisão</button></div></div>`;
+  $("#quiz-run").hidden=true;$("#quiz-result").hidden=false;$("#quiz-result").innerHTML=html;R=null;window.scrollTo({top:0});
+}
+function renderTrainSetup(){$("#quiz-setup").hidden=false;$("#quiz-run").hidden=true;$("#quiz-result").hidden=true;
+  $("#quiz-setup").innerHTML=`<h2>Treino intercalado</h2><p class="lead">Questões de todos os módulos misturadas, na proporção da prova. Você responde, vê o porquê, e depois explica em voz alta como se fosse pra um cliente. Essa explicação é o que fixa.</p>
+  <div class="card"><div class="row"><label>Quantas: <select id="t-n"><option>15</option><option selected>25</option><option>40</option></select></label>
+  <label>Foco: <select id="t-mod"><option value="0">Todos (proporção da prova)</option><option value="1">Só Módulo 1</option><option value="2">Só Módulo 2</option><option value="3">Só Módulo 3</option><option value="4">Só Módulo 4</option></select></label></div>
+  <div class="row" style="margin-top:12px"><button class="btn" onclick="startTrain()">Começar treino</button><button class="btn ghost" onclick="startDiag()">Diagnóstico (20)</button></div></div>`}
+function renderSimSetup(){$("#quiz-setup").hidden=false;$("#quiz-run").hidden=true;$("#quiz-result").hidden=true;
+  const last=S.sims.map(s=>s.score).join(", ")||"nenhum ainda";
+  $("#quiz-setup").innerHTML=`<h2>Simulado completo</h2><p class="lead">50 questões na proporção oficial (10 · 20 · 15 · 5), 2h30 no relógio, sem feedback até o fim. Faça como na prova: sem pausa, sem consultar nada, calculadora só no papel.</p>
+  <div class="card"><p><b>Simulados anteriores:</b> ${last}</p><p class="muted">O banco tem ${Q.length} questões, então um segundo simulado vai repetir parte delas. Ainda vale: repetir com espaçamento é exatamente o método.</p>
+  <div class="row"><button class="btn" onclick="startSim()">Iniciar simulado (2h30)</button></div></div>`}
+
+/* ---------- REVISÃO ---------- */
+function renderRev(){
+  const now=Date.now();const all=Object.keys(S.cards).map(Number);
+  const due=all.filter(i=>S.cards[i].due<=now),later=all.filter(i=>S.cards[i].due>now);
+  const box=$("#rev-box");
+  if(!all.length){box.innerHTML=`<div class="card empty">Nenhum card ainda. Cards nascem quando você erra uma questão ou marca "Travei" no Feynman. Vá treinar.</div>`;return}
+  if(!due.length){const nx=Math.min(...later.map(i=>S.cards[i].due));const h=Math.max(1,Math.round((nx-now)/3600e3));box.innerHTML=`<div class="card empty">Tudo em dia. ${later.length} card(s) voltam daqui a ~${h}h. Enquanto isso, Treino ou Simulado.</div>`;return}
+  let k=0;const show=()=>{
+    if(k>=due.length){renderRev();return}
+    const i=due[k],q=Q[i];
+    box.innerHTML=`<p class="muted">${due.length-k} card(s) pra rever agora · ${later.length} agendado(s)</p>
+    <div class="flash"><div class="q-meta"><span>M${q.m} · ${q.t}</span><span>nível ${S.cards[i].box}</span></div><div class="front">${q.q}</div><div id="fl-back" hidden class="back"><p><b>${"ABCD"[q.a]}) ${q.o[q.a]}</b></p><p class="muted">${q.e}</p></div></div>
+    <div class="row" style="margin-top:12px" id="fl-ctl"><button class="btn" onclick="document.getElementById('fl-back').hidden=false;document.getElementById('fl-ctl').hidden=true;document.getElementById('fl-grade').hidden=false">Mostrar resposta</button></div>
+    <div class="row" style="margin-top:12px" id="fl-grade" hidden><button class="btn ghost" style="flex:1" onclick="gradeCard(${i},0)">Errei</button><button class="btn ghost" style="flex:1" onclick="gradeCard(${i},1)">Quase</button><button class="btn" style="flex:1" onclick="gradeCard(${i},2)">Acertei</button></div>`;
+    window.gradeCard=(i,g)=>{const c=S.cards[i];if(g===0){addCard(i,0);record(i,false)}else if(g===1)addCard(i,Math.max(1,c.box));else{record(i,true);if(c.box>=3){delete S.cards[i];save()}else addCard(i,c.box+1)}k++;show()};
+  };show();
+}
+
+/* ---------- RESUMÃO ---------- */
+function renderSum(){
+  $("#sum-box").innerHTML=`
+<details open><summary>Tabelas de imposto (cai SEMPRE)</summary><div class="in">
+<div class="tbl"><table><tr><th>Renda fixa / fundos RF (regressiva)</th><th>Alíquota</th></tr>
+<tr><td>até 180 dias</td><td class="n">22,5%</td></tr><tr><td>181 a 360</td><td class="n">20%</td></tr><tr><td>361 a 720</td><td class="n">17,5%</td></tr><tr><td>acima de 720</td><td class="n">15%</td></tr></table></div>
+<div class="tbl"><table><tr><th>Outros</th><th>Regra</th></tr>
+<tr><td>IOF renda fixa</td><td>regressivo, 96% → 0% em 30 dias; só sobre rendimento</td></tr>
+<tr><td>Ações (comum)</td><td class="n">15% s/ ganho; isento se vendas ≤ R$ 20 mil/mês</td></tr>
+<tr><td>Ações (day trade)</td><td class="n">20%, sem isenção</td></tr>
+<tr><td>Dividendos / JCP</td><td>isentos / 15% na fonte</td></tr>
+<tr><td>Come-cotas</td><td>maio e nov; 15% (longo) ou 20% (curto); não em fundo de ações</td></tr>
+<tr><td>Fundo de ações</td><td class="n">15% só no resgate</td></tr>
+<tr><td>FII rendimento</td><td>isento PF (≥50 cotistas, bolsa, &lt;10%); venda de cota 20%</td></tr>
+<tr><td>Isentos PF</td><td>LCI, LCA, LCD, CRI, CRA, debênture incentivada, poupança</td></tr>
+<tr><td>Previdência regressiva</td><td class="n">35 → 30 → 25 → 20 → 15 → 10% (a cada 2 anos, até 10)</td></tr>
+<tr><td>Previdência progressiva</td><td>15% na fonte + ajuste na declaração</td></tr>
+<tr><td>PGBL</td><td>deduz até 12% (completa + INSS); IR sobre o total</td></tr>
+<tr><td>VGBL</td><td>não deduz; IR só sobre rendimentos</td></tr></table></div></div></details>
+
+<details><summary>FGC: quem tem e quem não tem</summary><div class="in">
+<p><b>R$ 250 mil</b> por CPF por instituição; teto <b>R$ 1 milhão</b> a cada 4 anos.</p>
+<p><b>Tem:</b> depósito à vista, poupança, CDB, RDB, LCI, LCA, LC, LH.<br><b>Não tem:</b> fundos, Tesouro Direto, debêntures, CRI, CRA, COE, ações, previdência.</p>
+<p class="muted">Macete: FGC só cobre o que o BANCO deve a você. Fundo não é dívida do banco; Tesouro é dívida do governo; debênture/CRI/CRA é dívida de empresa.</p></div></details>
+
+<details><summary>Quem é quem no SFN</summary><div class="in">
+<div class="tbl"><table><tr><th>Normativo</th><th>Supervisor</th><th>Cuida de</th></tr>
+<tr><td>CMN</td><td>BC e CVM</td><td>BC: bancos, câmbio, SPB, consórcios. CVM: ações, fundos, debêntures, bolsa</td></tr>
+<tr><td>CNSP</td><td>SUSEP</td><td>seguros, capitalização, previdência aberta (PGBL/VGBL)</td></tr>
+<tr><td>CNPC</td><td>PREVIC</td><td>previdência fechada (fundos de pensão)</td></tr></table></div>
+<p>Copom: 8 reuniões/ano (45 dias), define meta Selic. CMN define meta de inflação (IPCA). Anbima: autorregula distribuição, suitability, publicidade. BSM: supervisiona a B3. COAF: lavagem de dinheiro.</p></div></details>
+
+<details><summary>Política monetária em 3 linhas</summary><div class="in">
+<p><b>Segurar inflação (contracionista):</b> vende títulos, sobe compulsório, sobe redesconto, sobe Selic.<br><b>Estimular (expansionista):</b> o contrário.<br><b>Taxa real:</b> (1+nominal) ÷ (1+inflação) − 1. Aproximação: nominal − inflação (sempre dá um pouco a mais que a exata).</p>
+<p>Juros sobem → preço do prefixado cai. Pós-fixado (LFT, CDB % CDI) acompanha. IPCA+ protege da inflação.</p></div></details>
+
+<details><summary>Produtos: um resumo por linha</summary><div class="in">
+<div class="tbl"><table>
+<tr><td>LFT / Tesouro Selic</td><td>pós, reserva de emergência, oscila pouco</td></tr>
+<tr><td>LTN / Prefixado</td><td>taxa travada, oscila com juros, sem cupom</td></tr>
+<tr><td>NTN-B / IPCA+</td><td>IPCA + juros; "Principal" sem cupom, a outra com cupom semestral</td></tr>
+<tr><td>CDB / RDB</td><td>banco, FGC, IR regressivo; RDB não tem liquidez antes do prazo</td></tr>
+<tr><td>LCI / LCA</td><td>banco, FGC, isento PF</td></tr>
+<tr><td>CRI / CRA</td><td>securitizadora, sem FGC, isento PF, pouca liquidez</td></tr>
+<tr><td>Debênture</td><td>empresa (S/A), sem FGC; incentivada = isenta</td></tr>
+<tr><td>COE</td><td>banco + derivativos; capital protegido ou em risco; sem FGC; exige DIE</td></tr>
+<tr><td>Poupança</td><td>Selic &gt; 8,5%: 0,5% a.m.+TR; ≤ 8,5%: 70% Selic+TR; isenta; aniversário</td></tr>
+<tr><td>ON / PN</td><td>voto / prioridade em dividendo; tag along 80% (ON) e 100% no Novo Mercado</td></tr>
+<tr><td>Fundos mín.</td><td>RF 80% · Ações 67% · Cambial 80% · Multimercado livre</td></tr>
+<tr><td>Fundo CVM 175</td><td>classes e subclasses; gestor decide, administrador responde; cotista pode ter responsabilidade limitada</td></tr>
+<tr><td>Consórcio</td><td>sem juros, taxa de adm, sorteio/lance, supervisão BC</td></tr>
+<tr><td>Cheque especial</td><td>teto 8% a.m.; pior dívida junto com rotativo</td></tr>
+<tr><td>Consignado</td><td>desconto em folha, margem limitada, juros baixos</td></tr></table></div></div></details>
+
+<details><summary>Relacionamento, ética e PLD: números</summary><div class="in">
+<p><b>Suitability:</b> perfil, objetivo e situação financeira; atualizar a cada <b>24 meses</b>; produto inadequado → alerta + declaração expressa do cliente.<br>
+<b>Investidor:</b> qualificado ≥ R$ 1 mi; profissional ≥ R$ 10 mi (Res. CVM 30).<br>
+<b>PLD:</b> Lei 9.613/98; fases colocação → ocultação → integração; comunicar ao COAF em <b>24h</b>, sem avisar o cliente; espécie ≥ R$ 50 mil comunica automático; guardar registros ≥ 5 anos; comunicação negativa anual; PEP = diligência reforçada.<br>
+<b>Crimes (Lei 6.385):</b> manipulação 27-C · insider 27-D · exercício irregular 27-E. Spoofing/layering = ordens falsas; churning = giro excessivo; front running = correr na frente do cliente; money pass = condição artificial.<br>
+<b>LGPD:</b> Lei 13.709/18, ANPD. <b>Sigilo:</b> LC 105/01; quebra por juiz, CPI, Receita (na lei).<br>
+<b>Ciclo de vida:</b> acumulação → crescimento → preservação → distribuição.<br>
+<b>Diversificação:</b> reduz risco não sistemático; o sistemático fica.</p></div></details>
+
+<details><summary>Inovação (10%, 5 questões)</summary><div class="in">
+<p><b>ESG</b> = Ambiental, Social, Governança. PRI (ONU). Fundo "IS" precisa ter sustentabilidade como objetivo (Anbima + CVM 175 art. 49); "integra ESG" só considera fatores. Greenwashing = marketing verde falso.<br>
+<b>DeFi:</b> blockchain, smart contract (autoexecutável), DEX, DAO, tokenização (fracionar ativos), NFT (único), stablecoin (atrelada a moeda), DREX (CBDC do BC).<br>
+<b>Open Finance:</b> dado é do cliente; consentimento; Res. Conjunta 1/2020 BC/CMN; open insurance (SUSEP), open investment (CVM 209/210/229 portabilidade).<br>
+<b>IA:</b> generativa (cria conteúdo, pode errar) × preditiva (estima risco). Cuidados: LGPD, viés, supervisão humana.<br>
+<b>Fintechs:</b> SCD (recurso próprio) e SEP (P2P); sandbox regulatório; arranjo de pagamento: emissor, bandeira, adquirente, subadquirente.</p></div></details>
+
+<p class="note">Fonte do conteúdo: Programa Detalhado da CPA (Anbima, versão 1.2, vigente desde 01/01/2026) e Edital v1.4. Alíquotas e limites conferidos em outubro/2026; se algo parecer diferente no seu material de curso, o material oficial do Anbima Edu manda.</p>`;
+}
+
+applyPrefs();renderHome();renderRev();setSync("local");initCloud();
+</script>
+
+</body>
+</html>
